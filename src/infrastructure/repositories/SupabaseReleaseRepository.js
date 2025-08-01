@@ -4,6 +4,8 @@ const supabase = require('../../config/supabase');
 
 class SupabaseReleaseRepository extends ReleaseRepository {
   async getLatestRelease(platform, arch) {
+    console.log(`SupabaseReleaseRepository - getLatestRelease: platform=${platform}, arch=${arch}`);
+    
     const { data, error } = await supabase
       .from('releases')
       .select('*')
@@ -15,11 +17,17 @@ class SupabaseReleaseRepository extends ReleaseRepository {
       .limit(1)
       .single();
 
+    console.log('SupabaseReleaseRepository - Query result:', { data, error });
+
     if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
+      console.log('SupabaseReleaseRepository - Query error:', error);
       throw error;
     }
 
-    if (!data) return null;
+    if (!data) {
+      console.log('SupabaseReleaseRepository - No data found');
+      return null;
+    }
 
     return new Release({
       id: data.id,

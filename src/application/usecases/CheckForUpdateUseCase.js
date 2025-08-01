@@ -6,12 +6,19 @@ class CheckForUpdateUseCase {
   }
 
   async execute({ currentVersion, platform, arch }) {
+    console.log(`CheckForUpdateUseCase - Input: currentVersion=${currentVersion}, platform=${platform}, arch=${arch}`);
+    
     // Get the latest release for the platform and architecture
     const latestRelease = await this.releaseRepository.getLatestRelease(platform, arch);
 
+    console.log('CheckForUpdateUseCase - Latest release:', JSON.stringify(latestRelease, null, 2));
+
     if (!latestRelease) {
+      console.log('CheckForUpdateUseCase - No release found');
       return null;
     }
+
+    console.log(`CheckForUpdateUseCase - Version comparison: ${latestRelease.version} > ${currentVersion} = ${semver.gt(latestRelease.version, currentVersion)}`);
 
     // Check if update is needed
     if (semver.gt(latestRelease.version, currentVersion)) {

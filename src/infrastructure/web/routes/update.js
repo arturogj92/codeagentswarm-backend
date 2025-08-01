@@ -57,6 +57,8 @@ router.get('/:platform/:version/latest-mac.yml', async (req, res) => {
     const arch = req.query.arch || 'x64';
 
     console.log(`macOS YAML update check: platform=${platform}, version=${version}, arch=${arch}`);
+    console.log('Request params:', req.params);
+    console.log('Request query:', req.query);
 
     const updateInfo = await checkForUpdateUseCase.execute({
       currentVersion: version,
@@ -64,7 +66,10 @@ router.get('/:platform/:version/latest-mac.yml', async (req, res) => {
       arch
     });
 
+    console.log('UpdateInfo result:', JSON.stringify(updateInfo, null, 2));
+
     if (!updateInfo) {
+      console.log('No update found - returning 404');
       return res.status(404).json({ error: 'No update available' });
     }
 
