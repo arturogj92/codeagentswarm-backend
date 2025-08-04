@@ -6,6 +6,7 @@ const path = require('path');
 // Import routes
 const updateRouter = require('./infrastructure/web/routes/update');
 const logsRouter = require('./infrastructure/web/routes/logs');
+const changelogRouter = require('./infrastructure/web/routes/changelog');
 // const crashReportsRouter = require('./infrastructure/web/routes/crashReports');
 // const releaseRouter = require('./infrastructure/web/routes/releases');
 
@@ -54,6 +55,7 @@ app.get('/health', (req, res) => {
 // Routes
 app.use('/update', updateRouter);
 app.use('/api/logs', logsRouter);
+app.use('/api/changelog', changelogRouter);
 // app.use('/api/crash-reports', crashReportsRouter);
 // app.use('/api/releases', releaseRouter);
 
