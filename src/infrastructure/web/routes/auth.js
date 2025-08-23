@@ -188,8 +188,31 @@ router.get('/callback/:provider', async (req, res) => {
                 </div>
                 <script>
                     function openApp() {
+                        // Try to open the deep link
                         window.location.href = '${redirectUrl}';
+                        
+                        // Also try with a hidden iframe (backup method)
+                        setTimeout(() => {
+                            const iframe = document.createElement('iframe');
+                            iframe.style.display = 'none';
+                            iframe.src = '${redirectUrl}';
+                            document.body.appendChild(iframe);
+                            setTimeout(() => document.body.removeChild(iframe), 1000);
+                        }, 500);
                     }
+                    
+                    // For development: Also save auth data to localStorage for manual retrieval
+                    const authData = {
+                        token: '${tokens.accessToken}',
+                        refreshToken: '${tokens.refreshToken}',
+                        user: ${JSON.stringify({
+                            id: user.id,
+                            email: user.email,
+                            name: user.name,
+                            avatar_url: user.avatar_url
+                        })}
+                    };
+                    localStorage.setItem('codeagentswarm_auth', JSON.stringify(authData));
                     
                     // Try to open the app automatically
                     setTimeout(openApp, 1500);
@@ -197,8 +220,18 @@ router.get('/callback/:provider', async (req, res) => {
                     // Show different message after a few seconds
                     setTimeout(() => {
                         document.querySelector('.spinner').style.display = 'none';
-                        document.querySelector('.status').textContent = 'Click the button below if the app didn\\'t open';
+                        document.querySelector('.status').innerHTML = 'Click the button below to open CodeAgentSwarm<br><small style="color: #666;">If running in dev mode, switch to the Electron window manually</small>';
                     }, 3000);
+                    
+                    // Add dev mode instructions
+                    if (window.location.hostname === 'localhost' || window.location.hostname.includes('railway')) {
+                        setTimeout(() => {
+                            const devNote = document.createElement('div');
+                            devNote.style.cssText = 'margin-top: 2rem; padding: 1rem; background: #444; border-radius: 8px; font-size: 0.85rem; color: #aaa;';
+                            devNote.innerHTML = '<strong>Development Mode:</strong><br>If the app doesn\\'t open automatically, switch to your Electron window and you should be logged in.';
+                            document.querySelector('.container').appendChild(devNote);
+                        }, 3500);
+                    }
                 </script>
             </body>
             </html>
