@@ -139,57 +139,70 @@ router.get('/callback/:provider', async (req, res) => {
                 avatar_url: user.avatar_url
             }))}`;
 
-        // For development, also show a page with the tokens
-        if (process.env.NODE_ENV === 'development') {
-            return res.send(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Authentication Successful</title>
-                    <style>
-                        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-                               display: flex; justify-content: center; align-items: center; 
-                               min-height: 100vh; margin: 0; background: #f5f5f5; }
-                        .container { background: white; padding: 2rem; border-radius: 8px; 
-                                   box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 500px; }
-                        h1 { color: #333; }
-                        .success { color: #10b981; }
-                        .token-box { background: #f9fafb; padding: 1rem; border-radius: 4px; 
-                                    margin: 1rem 0; word-break: break-all; font-family: monospace; }
-                        button { background: #3b82f6; color: white; border: none; 
-                                padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; }
-                        button:hover { background: #2563eb; }
-                    </style>
-                </head>
-                <body>
-                    <div class="container">
-                        <h1 class="success">✓ Authentication Successful!</h1>
-                        <p>You've been logged in with ${provider}.</p>
-                        <p><strong>User:</strong> ${user.email}</p>
-                        
-                        <p>The app should open automatically. If not, click the button below:</p>
-                        <button onclick="window.location.href='${redirectUrl}'">
-                            Open CodeAgentSwarm
-                        </button>
-                        
-                        <div class="token-box">
-                            <small>Debug Info (dev only):</small><br>
-                            Token: ${tokens.accessToken.substring(0, 20)}...
-                        </div>
+        // Always show a page with automatic redirect
+        // This works better than direct redirects for custom protocol handlers
+        return res.send(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Authentication Successful</title>
+                <style>
+                    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+                           display: flex; justify-content: center; align-items: center; 
+                           min-height: 100vh; margin: 0; background: #1a1a1a; color: white; }
+                    .container { background: #2a2a2a; padding: 2rem; border-radius: 12px; 
+                               box-shadow: 0 10px 40px rgba(0,0,0,0.5); max-width: 500px; text-align: center; }
+                    h1 { color: #10b981; margin-bottom: 1.5rem; }
+                    .user-info { background: #333; padding: 1rem; border-radius: 8px; margin: 1.5rem 0; }
+                    .avatar { width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 1rem; }
+                    button { background: #3b82f6; color: white; border: none; 
+                            padding: 1rem 2rem; border-radius: 8px; cursor: pointer; 
+                            font-size: 1.1rem; margin-top: 1rem; }
+                    button:hover { background: #2563eb; }
+                    .spinner { border: 3px solid #333; border-top: 3px solid #3b82f6; 
+                              border-radius: 50%; width: 30px; height: 30px;
+                              animation: spin 1s linear infinite; margin: 1rem auto; }
+                    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+                    .status { color: #888; margin-top: 1rem; font-size: 0.9rem; }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>✓ Authentication Successful!</h1>
+                    <div class="user-info">
+                        ${user.avatar_url ? `<img src="${user.avatar_url}" alt="Avatar" class="avatar">` : ''}
+                        <p><strong>${user.name || user.email}</strong></p>
+                        <p style="color: #888; font-size: 0.9rem;">${user.email}</p>
                     </div>
-                    <script>
-                        // Try to open the app automatically
-                        setTimeout(() => {
-                            window.location.href = '${redirectUrl}';
-                        }, 1000);
-                    </script>
-                </body>
-                </html>
-            `);
-        }
-
-        // Production: just redirect
-        res.redirect(redirectUrl);
+                    
+                    <div class="spinner"></div>
+                    <p class="status">Opening CodeAgentSwarm...</p>
+                    
+                    <button onclick="openApp()">
+                        Open CodeAgentSwarm Manually
+                    </button>
+                    
+                    <p style="color: #666; font-size: 0.8rem; margin-top: 2rem;">
+                        If the app doesn't open automatically, click the button above.
+                    </p>
+                </div>
+                <script>
+                    function openApp() {
+                        window.location.href = '${redirectUrl}';
+                    }
+                    
+                    // Try to open the app automatically
+                    setTimeout(openApp, 1500);
+                    
+                    // Show different message after a few seconds
+                    setTimeout(() => {
+                        document.querySelector('.spinner').style.display = 'none';
+                        document.querySelector('.status').textContent = 'Click the button below if the app didn\\'t open';
+                    }, 3000);
+                </script>
+            </body>
+            </html>
+        `);
     } catch (error) {
         console.error('OAuth callback error:', error);
         res.status(500).send(`
