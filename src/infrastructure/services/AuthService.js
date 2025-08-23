@@ -140,16 +140,17 @@ class AuthService {
      */
     async createSession(userId, tokens, metadata = {}) {
         try {
-            // Hash tokens for storage
-            const tokenHash = await bcrypt.hash(tokens.accessToken, 10);
+            // Hash the refresh token for secure storage
             const refreshTokenHash = await bcrypt.hash(tokens.refreshToken, 10);
 
             const session = {
                 user_id: userId,
-                token_hash: tokenHash,
-                refresh_token_hash: refreshTokenHash,
+                access_token: tokens.accessToken,  // Store access token as-is
+                refresh_token: tokens.refreshToken, // Store refresh token as-is
+                refresh_token_hash: refreshTokenHash, // Store hash for secure lookup
                 device_info: metadata.device_info || {},
                 ip_address: metadata.ip_address || null,
+                user_agent: metadata.device_info?.user_agent || null,
                 expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days
             };
 
