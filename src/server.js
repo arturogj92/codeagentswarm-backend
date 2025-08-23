@@ -7,6 +7,7 @@ const path = require('path');
 const updateRouter = require('./infrastructure/web/routes/update');
 const logsRouter = require('./infrastructure/web/routes/logs');
 const changelogRouter = require('./infrastructure/web/routes/changelog');
+const authRouter = require('./infrastructure/web/routes/auth');
 // const crashReportsRouter = require('./infrastructure/web/routes/crashReports');
 // const releaseRouter = require('./infrastructure/web/routes/releases');
 
@@ -42,6 +43,9 @@ app.use(express.urlencoded({ extended: true }));
 // Static files for downloads
 app.use('/downloads', express.static(path.join(__dirname, '../uploads/releases')));
 
+// Static files for auth pages
+app.use(express.static(path.join(__dirname, '../public')));
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({ 
@@ -56,6 +60,7 @@ app.get('/health', (req, res) => {
 app.use('/update', updateRouter);
 app.use('/api/logs', logsRouter);
 app.use('/api/changelog', changelogRouter);
+app.use('/api/auth', authRouter);
 // app.use('/api/crash-reports', crashReportsRouter);
 // app.use('/api/releases', releaseRouter);
 
