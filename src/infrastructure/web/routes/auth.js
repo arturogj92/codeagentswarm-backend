@@ -39,9 +39,10 @@ router.get('/login/:provider', async (req, res) => {
                 if (!process.env.GITHUB_CLIENT_ID) {
                     throw new Error('GitHub OAuth not configured. Please set GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET');
                 }
+                const backendUrl = process.env.BACKEND_URL || 'https://codeagentswarm-backend-production.up.railway.app';
                 authUrl = `https://github.com/login/oauth/authorize?` +
                     `client_id=${process.env.GITHUB_CLIENT_ID}&` +
-                    `redirect_uri=${encodeURIComponent(process.env.BACKEND_URL + '/api/auth/callback/github')}&` +
+                    `redirect_uri=${encodeURIComponent(backendUrl + '/api/auth/callback/github')}&` +
                     `scope=${encodeURIComponent('user:email read:user')}&` +
                     `state=${state}`;
                 break;
@@ -50,9 +51,10 @@ router.get('/login/:provider', async (req, res) => {
                 if (!process.env.GOOGLE_CLIENT_ID) {
                     throw new Error('Google OAuth not configured. Please set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET');
                 }
+                const backendUrl = process.env.BACKEND_URL || 'https://codeagentswarm-backend-production.up.railway.app';
                 authUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
                     `client_id=${process.env.GOOGLE_CLIENT_ID}&` +
-                    `redirect_uri=${encodeURIComponent(process.env.BACKEND_URL + '/api/auth/callback/google')}&` +
+                    `redirect_uri=${encodeURIComponent(backendUrl + '/api/auth/callback/google')}&` +
                     `response_type=code&` +
                     `scope=${encodeURIComponent('email profile')}&` +
                     `state=${state}`;
@@ -62,9 +64,10 @@ router.get('/login/:provider', async (req, res) => {
                 if (!process.env.DISCORD_CLIENT_ID) {
                     throw new Error('Discord OAuth not configured. Please set DISCORD_CLIENT_ID and DISCORD_CLIENT_SECRET');
                 }
+                const backendUrl = process.env.BACKEND_URL || 'https://codeagentswarm-backend-production.up.railway.app';
                 authUrl = `https://discord.com/api/oauth2/authorize?` +
                     `client_id=${process.env.DISCORD_CLIENT_ID}&` +
-                    `redirect_uri=${encodeURIComponent(process.env.BACKEND_URL + '/api/auth/callback/discord')}&` +
+                    `redirect_uri=${encodeURIComponent(backendUrl + '/api/auth/callback/discord')}&` +
                     `response_type=code&` +
                     `scope=${encodeURIComponent('identify email')}&` +
                     `state=${state}`;
