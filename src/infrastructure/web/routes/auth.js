@@ -188,7 +188,7 @@ router.get('/callback/:provider', async (req, res) => {
                         box-shadow: 
                             0 20px 60px rgba(0,0,0,0.5),
                             0 0 120px rgba(103, 126, 234, 0.2);
-                        max-width: 450px;
+                        max-width: 600px;
                         width: 90%;
                         text-align: center;
                         position: relative;
