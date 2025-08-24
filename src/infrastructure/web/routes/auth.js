@@ -332,6 +332,26 @@ router.get('/callback/:provider', async (req, res) => {
                         line-height: 1.5;
                     }
                     
+                    /* Logo styles */
+                    .logo-container {
+                        width: 100px;
+                        height: 100px;
+                        margin: 0 auto 1.5rem;
+                        position: relative;
+                        animation: logoFloat 3s ease-in-out infinite;
+                    }
+                    
+                    @keyframes logoFloat {
+                        0%, 100% { transform: translateY(0) rotate(0deg); }
+                        50% { transform: translateY(-10px) rotate(5deg); }
+                    }
+                    
+                    .logo-image {
+                        width: 100%;
+                        height: 100%;
+                        filter: drop-shadow(0 10px 30px rgba(103, 126, 234, 0.3));
+                    }
+                    
                     /* Success animation checkmark */
                     .success-icon {
                         width: 80px;
@@ -383,10 +403,35 @@ router.get('/callback/:provider', async (req, res) => {
             </head>
             <body>
                 <div class="container">
-                    <div class="success-icon">
-                        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                            <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
-                            <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                    <div class="logo-container">
+                        <svg class="logo-image" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                            <!-- CodeAgentSwarm Logo -->
+                            <defs>
+                                <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <!-- Hexagon background -->
+                            <path d="M100 20 L160 50 L160 110 L100 140 L40 110 L40 50 Z" fill="url(#logoGrad)" />
+                            <!-- Robot/Agent icon -->
+                            <g transform="translate(100, 80)">
+                                <circle cx="0" cy="-10" r="15" fill="white" opacity="0.9"/>
+                                <rect x="-20" y="5" width="40" height="30" rx="5" fill="white" opacity="0.9"/>
+                                <circle cx="-8" cy="-10" r="3" fill="#667eea"/>
+                                <circle cx="8" cy="-10" r="3" fill="#667eea"/>
+                                <rect x="-5" y="-5" width="10" height="3" rx="1" fill="#667eea"/>
+                            </g>
+                            <!-- Swarm dots -->
+                            <circle cx="60" cy="160" r="4" fill="#667eea" opacity="0.6">
+                                <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="100" cy="170" r="4" fill="#764ba2" opacity="0.6">
+                                <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" begin="0.5s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="140" cy="160" r="4" fill="#667eea" opacity="0.6">
+                                <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" begin="1s" repeatCount="indefinite"/>
+                            </circle>
                         </svg>
                     </div>
                     
@@ -445,24 +490,25 @@ router.get('/callback/:provider', async (req, res) => {
                     };
                     localStorage.setItem('codeagentswarm_auth', JSON.stringify(authData));
                     
-                    // Try to open the app automatically
-                    setTimeout(openApp, 1500);
+                    // Try to open the app automatically with multiple attempts
+                    setTimeout(() => {
+                        openApp();
+                        // Try again after a moment
+                        setTimeout(openApp, 1000);
+                        // And once more for good measure
+                        setTimeout(openApp, 2000);
+                    }, 800);
                     
-                    // Show different message after a few seconds
+                    // Update status message after a few seconds
                     setTimeout(() => {
                         document.querySelector('.loading-dots').style.display = 'none';
-                        document.querySelector('.status').innerHTML = 'Ready to launch!<br><small style="color: #a0aec0;">Click the button or switch to your Electron window</small>';
+                        document.querySelector('.status').innerHTML = 'CodeAgentSwarm is opening...<br><small style="color: #a0aec0;">If not, click the button below</small>';
                     }, 3000);
                     
-                    // Add dev mode instructions
-                    if (window.location.hostname === 'localhost' || window.location.hostname.includes('railway')) {
-                        setTimeout(() => {
-                            const devNote = document.createElement('div');
-                            devNote.style.cssText = 'margin-top: 2rem; padding: 1rem; background: #444; border-radius: 8px; font-size: 0.85rem; color: #aaa;';
-                            devNote.innerHTML = '<strong>Development Mode:</strong><br>If the app doesn\\'t open automatically, switch to your Electron window and you should be logged in.';
-                            document.querySelector('.container').appendChild(devNote);
-                        }, 3500);
-                    }
+                    // Final status update
+                    setTimeout(() => {
+                        document.querySelector('.status').innerHTML = 'You can close this window<br><small style="color: #a0aec0;">CodeAgentSwarm should be open</small>';
+                    }, 5000);
                 </script>
             </body>
             </html>
