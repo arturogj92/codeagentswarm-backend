@@ -155,7 +155,7 @@ router.get('/callback/:provider', async (req, res) => {
                         justify-content: center; 
                         align-items: center; 
                         min-height: 100vh; 
-                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        background: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 100%);
                         color: white;
                         overflow: hidden;
                     }
@@ -169,8 +169,8 @@ router.get('/callback/:provider', async (req, res) => {
                         top: -50%;
                         left: -50%;
                         background-image: 
-                            radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px),
-                            radial-gradient(circle, rgba(255,255,255,0.05) 2px, transparent 2px);
+                            radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px),
+                            radial-gradient(circle, rgba(103, 126, 234, 0.05) 2px, transparent 2px);
                         background-size: 50px 50px, 100px 100px;
                         animation: bgMove 60s linear infinite;
                     }
@@ -180,13 +180,14 @@ router.get('/callback/:provider', async (req, res) => {
                         100% { transform: translate(50px, 50px); }
                     }
                     .container { 
-                        background: rgba(255, 255, 255, 0.95);
+                        background: rgba(30, 30, 40, 0.95);
                         backdrop-filter: blur(20px);
                         padding: 3rem;
                         border-radius: 24px; 
+                        border: 1px solid rgba(255, 255, 255, 0.1);
                         box-shadow: 
-                            0 20px 60px rgba(0,0,0,0.3),
-                            0 0 120px rgba(103, 126, 234, 0.3);
+                            0 20px 60px rgba(0,0,0,0.5),
+                            0 0 120px rgba(103, 126, 234, 0.2);
                         max-width: 450px;
                         width: 90%;
                         text-align: center;
@@ -206,7 +207,7 @@ router.get('/callback/:provider', async (req, res) => {
                         }
                     }
                     h1 { 
-                        color: #1a202c;
+                        color: #ffffff;
                         font-size: 2rem;
                         font-weight: 700;
                         margin-bottom: 0.5rem;
@@ -214,16 +215,17 @@ router.get('/callback/:provider', async (req, res) => {
                     }
                     
                     .subtitle {
-                        color: #718096;
+                        color: #94a3b8;
                         font-size: 1rem;
                         margin-bottom: 2rem;
                     }
                     .user-card {
-                        background: linear-gradient(135deg, #667eea, #764ba2);
+                        background: linear-gradient(135deg, #1e293b, #334155);
+                        border: 1px solid rgba(67, 56, 202, 0.3);
                         padding: 1.5rem;
                         border-radius: 16px;
                         margin: 2rem 0;
-                        box-shadow: 0 10px 30px rgba(103, 126, 234, 0.3);
+                        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
                         animation: cardFloat 3s ease-in-out infinite;
                     }
                     
@@ -251,9 +253,9 @@ router.get('/callback/:provider', async (req, res) => {
                         opacity: 0.9;
                     }
                     .btn-primary { 
-                        background: linear-gradient(135deg, #667eea, #764ba2);
+                        background: linear-gradient(135deg, #4338ca, #5b21b6);
                         color: white; 
-                        border: none; 
+                        border: 1px solid rgba(255, 255, 255, 0.1); 
                         padding: 1rem 2.5rem;
                         border-radius: 12px;
                         cursor: pointer; 
@@ -261,7 +263,7 @@ router.get('/callback/:provider', async (req, res) => {
                         font-weight: 600;
                         margin-top: 1.5rem;
                         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                        box-shadow: 0 4px 15px rgba(103, 126, 234, 0.3);
+                        box-shadow: 0 4px 15px rgba(67, 56, 202, 0.3);
                         position: relative;
                         overflow: hidden;
                     }
@@ -279,7 +281,8 @@ router.get('/callback/:provider', async (req, res) => {
                     
                     .btn-primary:hover {
                         transform: translateY(-2px);
-                        box-shadow: 0 8px 25px rgba(103, 126, 234, 0.4);
+                        box-shadow: 0 8px 25px rgba(67, 56, 202, 0.5);
+                        background: linear-gradient(135deg, #4f46e5, #6d28d9);
                     }
                     
                     .btn-primary:hover::before {
@@ -307,7 +310,7 @@ router.get('/callback/:provider', async (req, res) => {
                     .dot {
                         width: 12px;
                         height: 12px;
-                        background: linear-gradient(135deg, #667eea, #764ba2);
+                        background: linear-gradient(135deg, #4338ca, #5b21b6);
                         border-radius: 50%;
                         animation: dotPulse 1.4s ease-in-out infinite;
                     }
@@ -320,13 +323,13 @@ router.get('/callback/:provider', async (req, res) => {
                         40% { transform: scale(1.2); opacity: 1; }
                     }
                     .status { 
-                        color: #4a5568;
+                        color: #94a3b8;
                         font-size: 0.95rem;
                         transition: all 0.3s ease;
                     }
                     
                     .footer-text {
-                        color: #718096;
+                        color: #64748b;
                         font-size: 0.85rem;
                         margin-top: 2rem;
                         line-height: 1.5;
@@ -349,7 +352,7 @@ router.get('/callback/:provider', async (req, res) => {
                     .logo-image {
                         width: 100%;
                         height: 100%;
-                        filter: drop-shadow(0 10px 30px rgba(103, 126, 234, 0.3));
+                        filter: drop-shadow(0 10px 30px rgba(67, 56, 202, 0.4));
                     }
                     
                     /* Success animation checkmark */
@@ -357,7 +360,7 @@ router.get('/callback/:provider', async (req, res) => {
                         width: 80px;
                         height: 80px;
                         margin: 0 auto 1.5rem;
-                        background: linear-gradient(135deg, #667eea, #764ba2);
+                        background: linear-gradient(135deg, #4338ca, #5b21b6);
                         border-radius: 50%;
                         display: flex;
                         align-items: center;
@@ -366,8 +369,8 @@ router.get('/callback/:provider', async (req, res) => {
                     }
                     
                     @keyframes successPulse {
-                        0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(103, 126, 234, 0.4); }
-                        50% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(103, 126, 234, 0); }
+                        0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(67, 56, 202, 0.4); }
+                        50% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(67, 56, 202, 0); }
                     }
                     
                     .checkmark {
