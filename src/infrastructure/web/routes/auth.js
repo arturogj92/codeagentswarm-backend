@@ -404,35 +404,7 @@ router.get('/callback/:provider', async (req, res) => {
             <body>
                 <div class="container">
                     <div class="logo-container">
-                        <svg class="logo-image" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                            <!-- CodeAgentSwarm Logo -->
-                            <defs>
-                                <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
-                                    <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
-                                </linearGradient>
-                            </defs>
-                            <!-- Hexagon background -->
-                            <path d="M100 20 L160 50 L160 110 L100 140 L40 110 L40 50 Z" fill="url(#logoGrad)" />
-                            <!-- Robot/Agent icon -->
-                            <g transform="translate(100, 80)">
-                                <circle cx="0" cy="-10" r="15" fill="white" opacity="0.9"/>
-                                <rect x="-20" y="5" width="40" height="30" rx="5" fill="white" opacity="0.9"/>
-                                <circle cx="-8" cy="-10" r="3" fill="#667eea"/>
-                                <circle cx="8" cy="-10" r="3" fill="#667eea"/>
-                                <rect x="-5" y="-5" width="10" height="3" rx="1" fill="#667eea"/>
-                            </g>
-                            <!-- Swarm dots -->
-                            <circle cx="60" cy="160" r="4" fill="#667eea" opacity="0.6">
-                                <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/>
-                            </circle>
-                            <circle cx="100" cy="170" r="4" fill="#764ba2" opacity="0.6">
-                                <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" begin="0.5s" repeatCount="indefinite"/>
-                            </circle>
-                            <circle cx="140" cy="160" r="4" fill="#667eea" opacity="0.6">
-                                <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" begin="1s" repeatCount="indefinite"/>
-                            </circle>
-                        </svg>
+                        <img class="logo-image" src="https://raw.githubusercontent.com/arturogj92/codeagentswarm-app/main/assets/icons/logo_prod.png" alt="CodeAgentSwarm Logo" />
                     </div>
                     
                     <h1>Welcome Back!</h1>
@@ -440,7 +412,7 @@ router.get('/callback/:provider', async (req, res) => {
                     
                     <div class="user-card">
                         ${user.avatar_url ? `<img src="${user.avatar_url}" alt="Avatar" class="avatar">` : ''}
-                        <div class="user-name">${user.name || 'Developer'}</div>
+                        <div class="user-name">${user.name || user.email.split('@')[0]}</div>
                         <div class="user-email">${user.email}</div>
                     </div>
                     
