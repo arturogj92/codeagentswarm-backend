@@ -145,45 +145,276 @@ router.get('/callback/:provider', async (req, res) => {
             <!DOCTYPE html>
             <html>
             <head>
-                <title>Authentication Successful</title>
+                <title>Welcome to CodeAgentSwarm</title>
                 <style>
-                    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-                           display: flex; justify-content: center; align-items: center; 
-                           min-height: 100vh; margin: 0; background: #1a1a1a; color: white; }
-                    .container { background: #2a2a2a; padding: 2rem; border-radius: 12px; 
-                               box-shadow: 0 10px 40px rgba(0,0,0,0.5); max-width: 500px; text-align: center; }
-                    h1 { color: #10b981; margin-bottom: 1.5rem; }
-                    .user-info { background: #333; padding: 1rem; border-radius: 8px; margin: 1.5rem 0; }
-                    .avatar { width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 1rem; }
-                    button { background: #3b82f6; color: white; border: none; 
-                            padding: 1rem 2rem; border-radius: 8px; cursor: pointer; 
-                            font-size: 1.1rem; margin-top: 1rem; }
-                    button:hover { background: #2563eb; }
-                    .spinner { border: 3px solid #333; border-top: 3px solid #3b82f6; 
-                              border-radius: 50%; width: 30px; height: 30px;
-                              animation: spin 1s linear infinite; margin: 1rem auto; }
-                    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-                    .status { color: #888; margin-top: 1rem; font-size: 0.9rem; }
+                    * { margin: 0; padding: 0; box-sizing: border-box; }
+                    
+                    body { 
+                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, sans-serif; 
+                        display: flex; 
+                        justify-content: center; 
+                        align-items: center; 
+                        min-height: 100vh; 
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color: white;
+                        overflow: hidden;
+                    }
+                    
+                    /* Animated background */
+                    body::before {
+                        content: '';
+                        position: fixed;
+                        width: 200%;
+                        height: 200%;
+                        top: -50%;
+                        left: -50%;
+                        background-image: 
+                            radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px),
+                            radial-gradient(circle, rgba(255,255,255,0.05) 2px, transparent 2px);
+                        background-size: 50px 50px, 100px 100px;
+                        animation: bgMove 60s linear infinite;
+                    }
+                    
+                    @keyframes bgMove {
+                        0% { transform: translate(0, 0); }
+                        100% { transform: translate(50px, 50px); }
+                    }
+                    .container { 
+                        background: rgba(255, 255, 255, 0.95);
+                        backdrop-filter: blur(20px);
+                        padding: 3rem;
+                        border-radius: 24px; 
+                        box-shadow: 
+                            0 20px 60px rgba(0,0,0,0.3),
+                            0 0 120px rgba(103, 126, 234, 0.3);
+                        max-width: 450px;
+                        width: 90%;
+                        text-align: center;
+                        position: relative;
+                        z-index: 1;
+                        animation: slideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+                    }
+                    
+                    @keyframes slideUp {
+                        from {
+                            opacity: 0;
+                            transform: translateY(40px) scale(0.95);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: translateY(0) scale(1);
+                        }
+                    }
+                    h1 { 
+                        color: #1a202c;
+                        font-size: 2rem;
+                        font-weight: 700;
+                        margin-bottom: 0.5rem;
+                        letter-spacing: -0.02em;
+                    }
+                    
+                    .subtitle {
+                        color: #718096;
+                        font-size: 1rem;
+                        margin-bottom: 2rem;
+                    }
+                    .user-card {
+                        background: linear-gradient(135deg, #667eea, #764ba2);
+                        padding: 1.5rem;
+                        border-radius: 16px;
+                        margin: 2rem 0;
+                        box-shadow: 0 10px 30px rgba(103, 126, 234, 0.3);
+                        animation: cardFloat 3s ease-in-out infinite;
+                    }
+                    
+                    @keyframes cardFloat {
+                        0%, 100% { transform: translateY(0); }
+                        50% { transform: translateY(-5px); }
+                    }
+                    .avatar { 
+                        width: 80px; 
+                        height: 80px; 
+                        border-radius: 50%; 
+                        margin: 0 auto 1rem;
+                        border: 4px solid rgba(255, 255, 255, 0.3);
+                        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+                    }
+                    
+                    .user-name {
+                        font-size: 1.25rem;
+                        font-weight: 600;
+                        margin-bottom: 0.25rem;
+                    }
+                    
+                    .user-email {
+                        font-size: 0.9rem;
+                        opacity: 0.9;
+                    }
+                    .btn-primary { 
+                        background: linear-gradient(135deg, #667eea, #764ba2);
+                        color: white; 
+                        border: none; 
+                        padding: 1rem 2.5rem;
+                        border-radius: 12px;
+                        cursor: pointer; 
+                        font-size: 1rem;
+                        font-weight: 600;
+                        margin-top: 1.5rem;
+                        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                        box-shadow: 0 4px 15px rgba(103, 126, 234, 0.3);
+                        position: relative;
+                        overflow: hidden;
+                    }
+                    
+                    .btn-primary::before {
+                        content: '';
+                        position: absolute;
+                        top: 0;
+                        left: -100%;
+                        width: 100%;
+                        height: 100%;
+                        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+                        transition: left 0.5s ease;
+                    }
+                    
+                    .btn-primary:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 8px 25px rgba(103, 126, 234, 0.4);
+                    }
+                    
+                    .btn-primary:hover::before {
+                        left: 100%;
+                    }
+                    
+                    .btn-primary:active {
+                        transform: translateY(0);
+                    }
+                    .loading-container {
+                        margin: 2rem 0;
+                        height: 60px;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                    }
+                    
+                    .loading-dots {
+                        display: flex;
+                        gap: 8px;
+                        margin-bottom: 1rem;
+                    }
+                    
+                    .dot {
+                        width: 12px;
+                        height: 12px;
+                        background: linear-gradient(135deg, #667eea, #764ba2);
+                        border-radius: 50%;
+                        animation: dotPulse 1.4s ease-in-out infinite;
+                    }
+                    
+                    .dot:nth-child(2) { animation-delay: 0.2s; }
+                    .dot:nth-child(3) { animation-delay: 0.4s; }
+                    
+                    @keyframes dotPulse {
+                        0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+                        40% { transform: scale(1.2); opacity: 1; }
+                    }
+                    .status { 
+                        color: #4a5568;
+                        font-size: 0.95rem;
+                        transition: all 0.3s ease;
+                    }
+                    
+                    .footer-text {
+                        color: #718096;
+                        font-size: 0.85rem;
+                        margin-top: 2rem;
+                        line-height: 1.5;
+                    }
+                    
+                    /* Success animation checkmark */
+                    .success-icon {
+                        width: 80px;
+                        height: 80px;
+                        margin: 0 auto 1.5rem;
+                        background: linear-gradient(135deg, #667eea, #764ba2);
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        animation: successPulse 2s ease-in-out infinite;
+                    }
+                    
+                    @keyframes successPulse {
+                        0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(103, 126, 234, 0.4); }
+                        50% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(103, 126, 234, 0); }
+                    }
+                    
+                    .checkmark {
+                        display: inline-block;
+                        width: 40px;
+                        height: 40px;
+                        stroke-width: 3;
+                        stroke: white;
+                        stroke-miterlimit: 10;
+                    }
+                    
+                    .checkmark-circle {
+                        stroke-dasharray: 166;
+                        stroke-dashoffset: 166;
+                        stroke-width: 3;
+                        stroke-miterlimit: 10;
+                        stroke: white;
+                        fill: none;
+                        animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+                    }
+                    
+                    .checkmark-check {
+                        transform-origin: 50% 50%;
+                        stroke-dasharray: 48;
+                        stroke-dashoffset: 48;
+                        animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.6s forwards;
+                    }
+                    
+                    @keyframes stroke {
+                        100% { stroke-dashoffset: 0; }
+                    }
                 </style>
             </head>
             <body>
                 <div class="container">
-                    <h1>✓ Authentication Successful!</h1>
-                    <div class="user-info">
-                        ${user.avatar_url ? `<img src="${user.avatar_url}" alt="Avatar" class="avatar">` : ''}
-                        <p><strong>${user.name || user.email}</strong></p>
-                        <p style="color: #888; font-size: 0.9rem;">${user.email}</p>
+                    <div class="success-icon">
+                        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                            <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                            <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                        </svg>
                     </div>
                     
-                    <div class="spinner"></div>
-                    <p class="status">Opening CodeAgentSwarm...</p>
+                    <h1>Welcome Back!</h1>
+                    <p class="subtitle">Authentication successful</p>
                     
-                    <button onclick="openApp()">
-                        Open CodeAgentSwarm Manually
+                    <div class="user-card">
+                        ${user.avatar_url ? `<img src="${user.avatar_url}" alt="Avatar" class="avatar">` : ''}
+                        <div class="user-name">${user.name || 'Developer'}</div>
+                        <div class="user-email">${user.email}</div>
+                    </div>
+                    
+                    <div class="loading-container">
+                        <div class="loading-dots">
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                        </div>
+                        <p class="status">Launching CodeAgentSwarm...</p>
+                    </div>
+                    
+                    <button class="btn-primary" onclick="openApp()">
+                        Open CodeAgentSwarm Now
                     </button>
                     
-                    <p style="color: #666; font-size: 0.8rem; margin-top: 2rem;">
-                        If the app doesn't open automatically, click the button above.
+                    <p class="footer-text">
+                        The app should open automatically.<br>
+                        If it doesn't, click the button above.
                     </p>
                 </div>
                 <script>
@@ -219,8 +450,8 @@ router.get('/callback/:provider', async (req, res) => {
                     
                     // Show different message after a few seconds
                     setTimeout(() => {
-                        document.querySelector('.spinner').style.display = 'none';
-                        document.querySelector('.status').innerHTML = 'Click the button below to open CodeAgentSwarm<br><small style="color: #666;">If running in dev mode, switch to the Electron window manually</small>';
+                        document.querySelector('.loading-dots').style.display = 'none';
+                        document.querySelector('.status').innerHTML = 'Ready to launch!<br><small style="color: #a0aec0;">Click the button or switch to your Electron window</small>';
                     }, 3000);
                     
                     // Add dev mode instructions
