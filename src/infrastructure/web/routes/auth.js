@@ -490,14 +490,8 @@ router.get('/callback/:provider', async (req, res) => {
                     };
                     localStorage.setItem('codeagentswarm_auth', JSON.stringify(authData));
                     
-                    // Try to open the app automatically with multiple attempts
-                    setTimeout(() => {
-                        openApp();
-                        // Try again after a moment
-                        setTimeout(openApp, 1000);
-                        // And once more for good measure
-                        setTimeout(openApp, 2000);
-                    }, 800);
+                    // Try to open the app automatically once
+                    setTimeout(openApp, 1000);
                     
                     // Update status message after a few seconds
                     setTimeout(() => {
