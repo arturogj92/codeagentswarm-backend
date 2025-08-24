@@ -404,7 +404,7 @@ router.get('/callback/:provider', async (req, res) => {
             <body>
                 <div class="container">
                     <div class="logo-container">
-                        <img class="logo-image" src="https://raw.githubusercontent.com/arturogj92/codeagentswarm-app/main/assets/icons/logo_prod.png" alt="CodeAgentSwarm Logo" />
+                        <img class="logo-image" src="/images/logo.png" alt="CodeAgentSwarm Logo" />
                     </div>
                     
                     <h1>Welcome Back!</h1>
