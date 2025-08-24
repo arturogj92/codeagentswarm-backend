@@ -69,7 +69,7 @@ router.get('/login/:provider', async (req, res) => {
                     `client_id=${process.env.DISCORD_CLIENT_ID}&` +
                     `redirect_uri=${encodeURIComponent(backendUrl + '/api/auth/callback/discord')}&` +
                     `response_type=code&` +
-                    `scope=${encodeURIComponent('identify email')}&` +
+                    `scope=identify+email&` +
                     `state=${state}`;
                 break;
         }
@@ -428,7 +428,7 @@ router.get('/callback/:provider', async (req, res) => {
                         <p class="status">Launching CodeAgentSwarm...</p>
                     </div>
                     
-                    <button class="btn-primary" onclick="openApp()">
+                    <button class="btn-primary" onclick="manualOpenApp()">
                         Open CodeAgentSwarm Now
                     </button>
                     
@@ -438,18 +438,40 @@ router.get('/callback/:provider', async (req, res) => {
                     </p>
                 </div>
                 <script>
+                    let appOpened = false;
+                    let autoOpenAttempted = false;
+                    
                     function openApp() {
-                        // Try to open the deep link
-                        window.location.href = '${redirectUrl}';
+                        // Only allow one automatic attempt
+                        if (autoOpenAttempted) {
+                            console.log('Auto-open already attempted, skipping...');
+                            return;
+                        }
                         
-                        // Also try with a hidden iframe (backup method)
+                        autoOpenAttempted = true;
+                        appOpened = true;
+                        
+                        console.log('Attempting to open CodeAgentSwarm app automatically...');
+                        
+                        // Try to open the deep link using an iframe (more reliable)
+                        const iframe = document.createElement('iframe');
+                        iframe.style.display = 'none';
+                        iframe.src = '${redirectUrl}';
+                        document.body.appendChild(iframe);
+                        
+                        // Clean up iframe after a short delay
                         setTimeout(() => {
-                            const iframe = document.createElement('iframe');
-                            iframe.style.display = 'none';
-                            iframe.src = '${redirectUrl}';
-                            document.body.appendChild(iframe);
-                            setTimeout(() => document.body.removeChild(iframe), 1000);
-                        }, 500);
+                            if (iframe && iframe.parentNode) {
+                                iframe.parentNode.removeChild(iframe);
+                            }
+                        }, 100);
+                    }
+                    
+                    function manualOpenApp() {
+                        console.log('Manual open requested...');
+                        
+                        // For manual button clicks, use window.location which is more visible to user
+                        window.location.href = '${redirectUrl}';
                     }
                     
                     // For development: Also save auth data to localStorage for manual retrieval
@@ -465,8 +487,10 @@ router.get('/callback/:provider', async (req, res) => {
                     };
                     localStorage.setItem('codeagentswarm_auth', JSON.stringify(authData));
                     
-                    // Try to open the app automatically once
-                    setTimeout(openApp, 1000);
+                    // Try to open the app automatically once after a short delay
+                    setTimeout(() => {
+                        openApp(); // Function already has protection against multiple calls
+                    }, 1000);
                     
                     // Update status message after a few seconds
                     setTimeout(() => {
@@ -635,6 +659,9 @@ async function exchangeGitHubCode(code) {
 async function exchangeGoogleCode(code) {
     const fetch = (await import('node-fetch')).default;
     
+    // Use fallback URL if BACKEND_URL is not set
+    const backendUrl = process.env.BACKEND_URL || 'https://codeagentswarm-backend-production.up.railway.app';
+    
     // Exchange code for access token
     const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
         method: 'POST',
@@ -646,7 +673,7 @@ async function exchangeGoogleCode(code) {
             client_secret: process.env.GOOGLE_CLIENT_SECRET,
             code: code,
             grant_type: 'authorization_code',
-            redirect_uri: process.env.BACKEND_URL + '/api/auth/callback/google'
+            redirect_uri: backendUrl + '/api/auth/callback/google'
         })
     });
 
@@ -664,6 +691,13 @@ async function exchangeGoogleCode(code) {
     });
 
     const userData = await userResponse.json();
+    
+    console.log('Google OAuth response:', {
+        id: userData.id,
+        email: userData.email,
+        name: userData.name,
+        picture: userData.picture
+    });
 
     return {
         id: userData.id,
@@ -677,6 +711,9 @@ async function exchangeGoogleCode(code) {
 async function exchangeDiscordCode(code) {
     const fetch = (await import('node-fetch')).default;
     
+    // Use fallback URL if BACKEND_URL is not set
+    const backendUrl = process.env.BACKEND_URL || 'https://codeagentswarm-backend-production.up.railway.app';
+    
     // Exchange code for access token
     const tokenResponse = await fetch('https://discord.com/api/oauth2/token', {
         method: 'POST',
@@ -688,7 +725,7 @@ async function exchangeDiscordCode(code) {
             client_secret: process.env.DISCORD_CLIENT_SECRET,
             code: code,
             grant_type: 'authorization_code',
-            redirect_uri: process.env.BACKEND_URL + '/api/auth/callback/discord'
+            redirect_uri: backendUrl + '/api/auth/callback/discord'
         })
     });
 
