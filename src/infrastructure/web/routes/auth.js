@@ -691,13 +691,6 @@ async function exchangeGoogleCode(code) {
     });
 
     const userData = await userResponse.json();
-    
-    console.log('Google OAuth response:', {
-        id: userData.id,
-        email: userData.email,
-        name: userData.name,
-        picture: userData.picture
-    });
 
     return {
         id: userData.id,

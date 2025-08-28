@@ -8,6 +8,7 @@ const updateRouter = require('./infrastructure/web/routes/update');
 const logsRouter = require('./infrastructure/web/routes/logs');
 const changelogRouter = require('./infrastructure/web/routes/changelog');
 const authRouter = require('./infrastructure/web/routes/auth');
+const errorsRouter = require('./infrastructure/web/routes/errors');
 // const crashReportsRouter = require('./infrastructure/web/routes/crashReports');
 // const releaseRouter = require('./infrastructure/web/routes/releases');
 
@@ -61,6 +62,7 @@ app.use('/update', updateRouter);
 app.use('/api/logs', logsRouter);
 app.use('/api/changelog', changelogRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/errors', errorsRouter);
 // app.use('/api/crash-reports', crashReportsRouter);
 // app.use('/api/releases', releaseRouter);
 
